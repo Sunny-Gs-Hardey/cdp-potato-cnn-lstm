@@ -1,78 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Welcome - Potato Disease Prediction</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-  <style>
-    body {
-      background-color: #a7e0a956; /* celadon */
-      min-height: 100vh;
-      font-family: "Segoe UI", sans-serif;
-    }
-    .top-section {
-      background-color: #198754;
-      color: white;
-      padding: 2rem;
-      text-align: center;
-    }
-    .developer-box {
-      background-color: #d1f0d15b; /* lighter green */
-      padding: 1rem;
-      margin: 1rem auto;
-      border-radius: 8px;
-      max-width: 500px;
-    }
-    .samples img {
-      width: 150px;
-      border-radius: 8px;
-    }
-    .btn-start {
-      background-color: #198754;
-      color: white;
-      font-size: 1.2rem;
-      padding: 10px 30px;
-      margin-top: 1.5rem;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Welcome - Potato Disease Prediction</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<style>
+body { background-color: #a7e0a956; min-height: 100vh; font-family: "Segoe UI", sans-serif; }
+.top-section { background-color: #198754; color: white; padding: 2rem; text-align: center; }
+.developer-box { background-color: #d1f0d15b; padding: 1rem; margin: 1rem auto; border-radius: 8px; max-width: 500px; }
+.samples img { width: 150px; border-radius: 8px; }
+.btn-start { background-color: #198754; color: white; font-size: 1.2rem; padding: 10px 30px; margin-top: 1.5rem; }
+</style>
 </head>
 <body>
 
 <div class="top-section">
-  <h2>Crop Disease Prediction in Potato</h2>
-  <h4>Using CNN-LSTM-Based Machine Learning Models</h4>
-  <div class="developer-box mt-4">
-    <div class="row fw-bold">
-      <div class="col">Developer</div>
-      <div class="col">Matric Number</div>
-    </div>
-    <div class="row">
-      <div class="col">Lawal Quareeb Abayomi</div>
-      <div class="col">CSC/20/001</div>
-    </div>
-  </div>
+<h2>Crop Disease Prediction in Potato</h2>
+<h4>Using CNN-LSTM-Based Machine Learning Models</h4>
+<div class="developer-box mt-4">
+  <div class="row fw-bold"><div class="col">Developer</div><div class="col">Matric Number</div></div>
+  <div class="row"><div class="col">Lawal Quareeb Abayomi</div><div class="col">CSC/20/001</div></div>
+</div>
 </div>
 
 <div class="container text-center mt-5">
-  <h3 class="mb-3">Welcome Farmers</h3>
-  <p class="mb-4">Predict and get results on your potato leaf diseases with treatment advice.</p>
-  <a href="/main" class="btn btn-start">Start Prediction</a>
+<h3 class="mb-3">Welcome Farmers</h3>
+<p class="mb-4">Predict and get results on your potato leaf diseases with treatment advice.</p>
+<a href="/main" class="btn btn-start">Start Prediction</a>
 
-  <div class="row samples mt-5">
-    <div class="col">
-      <p>Healthy</p>
-      <img src="/static/healthy.jpg" alt="Healthy">
-    </div>
-    <div class="col">
-      <p>Early Blight</p>
-      <img src="/static/early_blight.jpg" alt="Early Blight">
-    </div>
-    <div class="col">
-      <p>Late Blight</p>
-      <img src="/static/late_blight.jpg" alt="Late Blight">
-    </div>
-  </div>
+<div class="row samples mt-5">
+  <div class="col"><p>Healthy</p><img src="{{ url_for('static', filename='healthy.jpg') }}" alt="Healthy"></div>
+  <div class="col"><p>Early Blight</p><img src="{{ url_for('static', filename='early_blight.jpg') }}" alt="Early Blight"></div>
+  <div class="col"><p>Late Blight</p><img src="{{ url_for('static', filename='late_blight.jpg') }}" alt="Late Blight"></div>
+</div>
 </div>
 
 </body>

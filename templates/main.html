@@ -1,220 +1,126 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Main - Potato Disease Detection</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-  <style>
-    body {
-      background-color: #ACE1AF; /* celadon */
-      min-height: 100vh;
-      font-family: "Segoe UI", sans-serif;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* Top Section */
-    .top-section {
-      background-color: #198754;
-      color: white;
-      padding: 1rem 2rem;
-    }
-    .top-section h3 { margin: 0; }
-
-    /* Center layout */
-    .center-wrapper {
-      flex: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-    }
-    .center-row {
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      gap: 2rem;
-      flex-wrap: wrap;
-      width: 100%;
-      max-width: 1100px;
-    }
-
-    /* Box Styling */
-    .box {
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      overflow: hidden;
-    }
-    .box-header {
-      background-color: #198754;
-      color: white;
-      padding: 0.75rem;
-      font-weight: bold;
-      text-align: center;
-    }
-    .box-body {
-      padding: 1.2rem;
-      text-align: center;
-    }
-    .upload-box { 
-        min-height: 200px; 
-        max-height: 450px; 
-    }
-
-    .result-label { color: black; margin-bottom: 0; }
-    .result-value { color: #198754; font-weight: bold; }
-
-    img {
-      max-width: 100%;
-      border-radius: 8px;
-    }
-
-    /* Loading dots animation */
-    .loading-text {
-      font-style: italic;
-      color: #198754;
-      margin-top: 10px;
-    }
-    .dot {
-      animation: blink 1.2s infinite;
-    }
-    .dot:nth-child(1) { animation-delay: 0s; }
-    .dot:nth-child(2) { animation-delay: 0.2s; }
-    .dot:nth-child(3) { animation-delay: 0.4s; }
-    @keyframes blink {
-      0%, 100% { opacity: 0; }
-      50% { opacity: 1; }
-    }
-
-    @media (max-width: 768px) {
-      .col-md-5 {
-        flex: 0 0 100%;
-        max-width: 100%;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Main - Potato Disease Detection</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+<style>
+body { background-color: #ACE1AF; min-height: 100vh; font-family: "Segoe UI", sans-serif; margin:0; display:flex; flex-direction:column; }
+.top-section { background-color:#198754; color:white; padding:1rem 2rem; display:flex; justify-content:space-between; align-items:center; }
+.center-wrapper { flex:1; display:flex; justify-content:center; align-items:center; padding:20px; }
+.center-row { display:flex; flex-wrap:wrap; gap:2rem; max-width:1100px; width:100%; justify-content:center; }
+.box { background:white; border-radius:10px; box-shadow:0 4px 8px rgba(0,0,0,0.1); overflow:hidden; }
+.box-header { background-color:#198754; color:white; padding:0.75rem; font-weight:bold; text-align:center; }
+.box-body { padding:1.2rem; text-align:center; }
+.upload-box { min-height:200px; max-height:450px; }
+.result-label { color:black; margin-bottom:0; }
+.result-value { color:#198754; font-weight:bold; }
+img { max-width:100%; border-radius:8px; }
+.loading-text { font-style:italic; color:#198754; margin-top:10px; }
+.dot { animation: blink 1.2s infinite; } 
+.dot:nth-child(1){animation-delay:0s;}
+.dot:nth-child(2){animation-delay:0.2s;}
+.dot:nth-child(3){animation-delay:0.4s;}
+@keyframes blink{0%,100%{opacity:0;}50%{opacity:1;}}
+@media(max-width:768px){.col-md-5{flex:0 0 100%; max-width:100%;}}
+</style>
 </head>
 <body>
 
-<!-- Top Section -->
-<div class="top-section d-flex justify-content-between align-items-center">
-  <a href="/" class="btn btn-light btn-sm">Back Home</a>
-  <h3>Prediction and Result</h3>
-  <button onclick="location.reload()" class="btn btn-light btn-sm">⟳ Refresh</button>
+<div class="top-section">
+<a href="/" class="btn btn-light btn-sm">Back Home</a>
+<h3>Prediction and Result</h3>
+<button onclick="location.reload()" class="btn btn-light btn-sm">&#x21bb; Refresh</button>
 </div>
 
-<!-- Body -->
 <div class="center-wrapper">
-  <div class="center-row">
+<div class="center-row">
 
-    <!-- Upload & Predict -->
-    <div class="col-md-5">
-      <div class="box upload-box">
-        <div class="box-header">Upload & Predict</div>
-        <div class="box-body">
-          <form id="uploadForm" enctype="multipart/form-data">
-            <input class="form-control mb-3" type="file" name="file" id="fileInput" accept="image/*" required>
+<div class="col-md-5">
+<div class="box upload-box">
+<div class="box-header">Upload & Predict</div>
+<div class="box-body">
+<form id="uploadForm" enctype="multipart/form-data">
+<input class="form-control mb-3" type="file" name="file" id="fileInput" accept="image/*" required>
+<div id="fileLoading" class="loading-text d-none">
+Loading<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>
+</div>
+<img id="uploadPreview" class="img-fluid mb-3 d-none" alt="Upload Preview" style="max-height:200px; margin:auto;">
+<div class="d-flex justify-content-center gap-3 mt-4">
+<button type="button" class="btn btn-outline-success w-50" onclick="resetForm()">Try Another Image</button>
+<button type="submit" class="btn btn-success w-50">Predict</button>
+</div>
+</form>
+</div>
+</div>
+</div>
 
-            <!-- Loading before preview -->
-            <div id="fileLoading" class="loading-text d-none">
-              Loading<span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>
-            </div>
+<div class="col-md-5">
+<div class="box">
+<div class="box-header">Result</div>
+<div class="box-body" id="resultBox">
+<h5 class="mb-3" id="resultHeading">No Prediction Yet</h5>
+<img id="resultImage" class="img-fluid mb-3 d-none" alt="Result Image" style="max-height:200px; margin:auto;">
+<p class="result-label">Prediction:</p><p class="result-value" id="predictionText">—</p>
+<p class="result-label">Confidence:</p><p class="result-value" id="confidenceText">—</p>
+<p class="result-label">Treatment Advice:</p><p class="result-value" id="treatmentText">—</p>
+</div>
+</div>
+</div>
 
-            <!-- Image Preview -->
-            <img id="uploadPreview" class="img-fluid mb-3 d-none" alt="Upload Preview" style="max-height:200px; margin:auto;">
-
-            <!-- Buttons -->
-            <div class="d-flex justify-content-center gap-3 mt-4">
-              <button type="button" class="btn btn-outline-success w-50" onclick="resetForm()">Try Another Image</button>
-              <button type="submit" class="btn btn-success w-50">Predict</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-
-    <!-- Result -->
-    <div class="col-md-5">
-      <div class="box">
-        <div class="box-header">Result</div>
-        <div class="box-body" id="resultBox">
-          <h5 class="mb-3" id="resultHeading">No Prediction Yet</h5>
-          <img id="resultImage" class="img-fluid mb-3 d-none" alt="Result Image" style="max-height:200px; margin:auto;">
-          <p class="result-label">Prediction:</p>
-          <p class="result-value" id="predictionText">—</p>
-          <p class="result-label">Confidence:</p>
-          <p class="result-value" id="confidenceText">—</p>
-          <p class="result-label">Treatment Advice:</p>
-          <p class="result-value" id="treatmentText">—</p>
-        </div>
-      </div>
-    </div>
-
-  </div>
+</div>
 </div>
 
 <script>
-  const form = document.getElementById("uploadForm");
-  const fileInput = document.getElementById("fileInput");
-  const uploadPreview = document.getElementById("uploadPreview");
-  const resultImage = document.getElementById("resultImage");
-  const resultHeading = document.getElementById("resultHeading");
-  const predictionText = document.getElementById("predictionText");
-  const confidenceText = document.getElementById("confidenceText");
-  const treatmentText = document.getElementById("treatmentText");
-  const fileLoading = document.getElementById("fileLoading");
+const form=document.getElementById("uploadForm");
+const fileInput=document.getElementById("fileInput");
+const uploadPreview=document.getElementById("uploadPreview");
+const resultImage=document.getElementById("resultImage");
+const resultHeading=document.getElementById("resultHeading");
+const predictionText=document.getElementById("predictionText");
+const confidenceText=document.getElementById("confidenceText");
+const treatmentText=document.getElementById("treatmentText");
+const fileLoading=document.getElementById("fileLoading");
 
-  // Show preview with 2s loading
-  fileInput.addEventListener("change", () => {
-    const file = fileInput.files[0];
-    if (file) {
-      uploadPreview.classList.add("d-none");
-      fileLoading.classList.remove("d-none");
+fileInput.addEventListener("change",()=>{
+const file=fileInput.files[0];
+if(file){
+uploadPreview.classList.add("d-none");
+fileLoading.classList.remove("d-none");
+setTimeout(()=>{
+uploadPreview.src=URL.createObjectURL(file);
+uploadPreview.classList.remove("d-none");
+fileLoading.classList.add("d-none");
+},2000);
+}
+});
 
-      setTimeout(() => {
-        const url = URL.createObjectURL(file);
-        uploadPreview.src = url;
-        uploadPreview.classList.remove("d-none");
-        fileLoading.classList.add("d-none");
-      }, 2000);
-    }
-  });
+form.addEventListener("submit",async(event)=>{
+event.preventDefault();
+const formData=new FormData(form);
+const file=formData.get("file");
+const response=await fetch("/predict",{method:"POST",body:formData});
+if(response.ok){
+const data=await response.json();
+resultHeading.textContent="Prediction Successful!";
+resultImage.src=URL.createObjectURL(file);
+resultImage.classList.remove("d-none");
+predictionText.textContent=data.prediction;
+confidenceText.textContent=data.confidence+"%";
+treatmentText.textContent=data.treatment;
+}else{alert("Prediction failed.");}
+});
 
-  form.addEventListener("submit", async (event) => {
-    event.preventDefault();
-    const formData = new FormData(form);
-    const file = formData.get("file");
-
-    const response = await fetch("/predict", {
-      method: "POST",
-      body: formData
-    });
-
-    if (response.ok) {
-      const data = await response.json();
-      resultHeading.textContent = "Prediction Successful!";
-      resultImage.src = URL.createObjectURL(file);
-      resultImage.classList.remove("d-none");
-      predictionText.textContent = data.prediction;
-      confidenceText.textContent = data.confidence + "%";
-      treatmentText.textContent = data.treatment;
-    } else {
-      alert("Prediction failed.");
-    }
-  });
-
-  function resetForm() {
-    fileInput.value = "";
-    uploadPreview.classList.add("d-none");
-    resultImage.classList.add("d-none");
-    predictionText.textContent = "—";
-    confidenceText.textContent = "—";
-    treatmentText.textContent = "—";
-    resultHeading.textContent = "No Prediction Yet";
-  }
+function resetForm(){
+fileInput.value="";
+uploadPreview.classList.add("d-none");
+resultImage.classList.add("d-none");
+predictionText.textContent="—";
+confidenceText.textContent="—";
+treatmentText.textContent="—";
+resultHeading.textContent="No Prediction Yet";
+}
 </script>
 
 </body>
