@@ -1,71 +1,80 @@
-from flask import Flask, render_template, request, jsonify
+import os
+import numpy as np
+from flask import Flask, render_template, request, redirect, url_for
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing.image import load_img, img_to_array
-import numpy as np
-import os
 import json
+from werkzeug.utils import secure_filename
 
+# Initialize Flask app
 app = Flask(__name__)
 
-# Upload folder
-UPLOAD_FOLDER = 'static/uploads'
+# Paths
+MODEL_PATH = "cnn_lstm_potato_model.h5"
+CLASS_INDICES_PATH = "class_indices.json"
+UPLOAD_FOLDER = os.path.join("static", "uploads")
+
+# Ensure upload folder exists
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
-# Load trained model
-model = load_model("cnn_lstm_potato_model.h5")
-
-# Load class indices
-with open("class_indices.json", "r") as f:
+# Load model & class indices
+model = load_model(MODEL_PATH)
+with open(CLASS_INDICES_PATH, "r") as f:
     class_indices = json.load(f)
-class_labels = {v: k for k, v in class_indices.items()}
 
-# Treatment advice
-treatment_advice = {
-    "Early_Blight": "Use fungicides like chlorothalonil or copper-based sprays. Remove infected leaves and practice crop rotation.",
-    "Late_Blight": "Apply fungicides such as mancozeb or metalaxyl. Destroy infected plants and avoid overhead irrigation.",
-    "Healthy": "No treatment needed. Maintain good hygiene and monitor regularly."
-}
+# Reverse mapping (index -> class name)
+idx_to_class = {v: k for k, v in class_indices.items()}
+
+
+# ---------------- ROUTES ---------------- #
 
 @app.route("/")
 def welcome():
+    """Welcome page"""
     return render_template("welcome.html")
+
 
 @app.route("/main")
 def main_page():
+    """Main upload/predict page"""
     return render_template("main.html")
+
 
 @app.route("/predict", methods=["POST"])
 def predict():
+    """Handle image upload & prediction"""
     if "file" not in request.files:
-        return jsonify({"error": "No file uploaded"}), 400
+        return redirect(request.url)
 
     file = request.files["file"]
+
     if file.filename == "":
-        return jsonify({"error": "No file selected"}), 400
+        return redirect(request.url)
 
-    filepath = os.path.join(UPLOAD_FOLDER, file.filename)
-    file.save(filepath)
+    if file:
+        filename = secure_filename(file.filename)
+        filepath = os.path.join(UPLOAD_FOLDER, filename)
+        file.save(filepath)
 
-    # Preprocess image
-    img = load_img(filepath, target_size=(224, 224))
-    img = img_to_array(img) / 255.0
-    img = np.expand_dims(img, axis=0)
+        # Preprocess image
+        img = load_img(filepath, target_size=(128, 128))  # adjust if your model uses another size
+        img_array = img_to_array(img) / 255.0
+        img_array = np.expand_dims(img_array, axis=0)
 
-    # Predict
-    pred = model.predict(img)
-    predicted_index = int(np.argmax(pred))
-    prediction = class_labels.get(predicted_index, "Unknown")
-    confidence = round(float(np.max(pred)) * 100, 2)
-    formatted_prediction = prediction.replace("_", " ").title()
+        # Prediction
+        preds = model.predict(img_array)
+        pred_idx = np.argmax(preds, axis=1)[0]
+        confidence = float(np.max(preds)) * 100
+        label = idx_to_class[pred_idx]
 
-    treatment = treatment_advice.get(prediction, "No advice available.")
+        return render_template(
+            "main.html",
+            prediction=label,
+            confidence=round(confidence, 2),
+            img_path=filepath
+        )
 
-    return jsonify({
-        "prediction": formatted_prediction,
-        "confidence": confidence,
-        "treatment": treatment,
-        "image_path": filepath
-    })
 
+# Run app
 if __name__ == "__main__":
     app.run(debug=True)
