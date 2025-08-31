@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  potato-disease-app:
+    build: .
+    ports:
+      - "5500:5500"
+    volumes:
+      - ./static/uploads:/app/static/uploads
+    environment:
+      - FLASK_APP=app.py
+      - FLASK_ENV=production
+    restart: unless-stopped 
